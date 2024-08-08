@@ -1,4 +1,6 @@
 class ArticlesController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  
     def index
         @articles = Article.all
         render json: @articles
@@ -37,5 +39,9 @@ class ArticlesController < ApplicationController
     
       def article_params
         params.require(:article).permit(:title, :content, :user_id, :portfolio_id)
+      end
+
+      def record_not_found
+        render json: { error: 'Record not found' }, status: :not_found
       end
 end
